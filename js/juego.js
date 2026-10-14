@@ -215,6 +215,12 @@
     estado.gano = gano;
     estado.motivo = gano ? 'victoria' : 'errores';
 
+    // Bono de victoria: +50 + (vidas restantes × 10)
+    if (gano) {
+      const vidasRestantes = estado.maxErrores - estado.errores;
+      estado.puntaje += PUNTOS_VICTORIA + vidasRestantes * PUNTOS_POR_VIDA;
+    }
+
     return { terminado: true, gano: gano, motivo: estado.motivo };
   }
 

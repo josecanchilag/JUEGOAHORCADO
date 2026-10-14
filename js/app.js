@@ -112,6 +112,7 @@
 
   /** Prepara la vista de juego con una partida recién iniciada. */
   function prepararVistaJuego() {
+    $('modal-resultado').hidden = true; // por si venía de una partida anterior
     window.UI.renderPalabra();
     window.UI.renderTeclado();
     actualizarTablero();
@@ -188,6 +189,12 @@
 
     // Reiniciar partida (RF-14)
     $('boton-reiniciar').addEventListener('click', reiniciarPartida);
+
+    // Modal de resultado: jugar de nuevo
+    $('boton-jugar-denuevo').addEventListener('click', function () {
+      $('modal-resultado').hidden = true;
+      reiniciarPartida();
+    });
   }
 
   /** Inicialización al cargar la página. */

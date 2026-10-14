@@ -154,12 +154,67 @@
     }
   }
 
-  // Exposición del módulo (mostrarResultado se agrega en el paso 8)
+  /**
+   * Muestra la ventana modal con el resultado de la partida:
+   * victoria o derrota, la capital con su departamento y región,
+   * el puntaje final y las acciones para seguir jugando (RF-17).
+   * @param {boolean} gano - true si el jugador ganó.
+   */
+  function mostrarResultado(gano) {
+    const estado = window.Juego.estado;
+    const overlay = document.getElementById('modal-resultado');
+    if (!overlay) return;
+
+    const modal = overlay.querySelector('.modal');
+    const nombreRegion = window.Juego.NOMBRES_REGION[estado.regionCapital] || estado.regionCapital;
+
+    modal.classList.remove('modal--victoria', 'modal--derrota');
+    modal.classList.add(gano ? 'modal--victoria' : 'modal--derrota');
+
+    document.getElementById('modal-icono').textContent = gano ? '🎉' : '💪';
+    document.getElementById('modal-titulo').textContent = gano
+      ? '¡Ganaste, ' + estado.jugador + '!'
+      : '¡Se acabaron los intentos!';
+
+    // La capital con su departamento y región (RF-17)
+    document.getElementById('modal-palabra').textContent = estado.palabra;
+
+    let detalle = 'Capital de ' + estado.departamento + ' · Región ' + nombreRegion;
+    if (estado.palabra === 'BOGOTÁ') {
+      detalle += ' · Bogotá es además el Distrito Capital del país';
+    }
+    if (estado.motivo === 'tiempo') {
+      detalle += ' · ⏱️ Se agotó el tiempo';
+    }
+    document.getElementById('modal-detalle').textContent = detalle + '.';
+
+    // Puntaje final con animación de contador
+    const puntaje = document.getElementById('modal-puntaje');
+    puntaje.textContent = String(estado.puntaje);
+
+    overlay.hidden = false;
+    document.getElementById('boton-jugar-denuevo').focus();
+
+    // Anuncio final para lectores de pantalla
+    const mensajeFinal = (gano ? '¡Victoria! ' : 'Derrota. ') +
+      'La capital era ' + estado.palabra + ', capital de ' + estado.departamento +
+      '. Puntaje final: ' + estado.puntaje + '.';
+    if (window.App && window.App.anunciar) window.App.anunciar(mensajeFinal);
+    if (window.App && window.App.mostrarSubtitulo) {
+      window.App.mostrarSubtitulo(mensajeFinal, gano ? 'acierto' : 'error');
+    }
+
+    // Actualiza el teclado (todo queda deshabilitado al terminar)
+    renderTeclado();
+  }
+
+  // Exposición del módulo
   window.UI = {
     LETRAS_TECLADO: LETRAS_TECLADO,
     PARTES_AHORCADO: PARTES_AHORCADO,
     renderPalabra: renderPalabra,
     renderTeclado: renderTeclado,
-    dibujarAhorcado: dibujarAhorcado
+    dibujarAhorcado: dibujarAhorcado,
+    mostrarResultado: mostrarResultado
   };
 })();
