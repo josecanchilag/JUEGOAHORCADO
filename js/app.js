@@ -131,12 +131,24 @@
       if (estado.tiempoRestante <= 0) {
         detenerCronometro();
         const fin = window.Juego.verificarEstado();
-        if (fin.terminado && window.UI.mostrarResultado) {
+        if (fin.terminado) {
           mostrarSubtitulo('⏰ ¡Se agotó el tiempo!', 'error');
-          window.UI.mostrarResultado(fin.gano);
+          finalizarPartida(fin.gano);
         }
       }
     }, 1000);
+  }
+
+  /** Finaliza la partida: guarda estadísticas y muestra el resultado (CP-06). */
+  function finalizarPartida(gano) {
+    detenerCronometro();
+    const estado = window.Juego.estado;
+    window.Almacenamiento.guardarEstadisticas({
+      gano: gano,
+      puntaje: estado.puntaje,
+      nombre: estado.jugador
+    });
+    if (window.UI.mostrarResultado) window.UI.mostrarResultado(gano);
   }
 
   /** Procesa la letra elegida (virtual o física) y actualiza todo. */
@@ -172,10 +184,7 @@
 
     // ¿Terminó la partida?
     const fin = window.Juego.verificarEstado();
-    if (fin.terminado) {
-      detenerCronometro();
-      if (window.UI.mostrarResultado) window.UI.mostrarResultado(fin.gano);
-    }
+    if (fin.terminado) finalizarPartida(fin.gano);
   }
 
   /** Prepara la vista de juego con una partida recién iniciada. */
@@ -277,10 +286,7 @@
 
       // La letra de la pista pudo completar la palabra
       const fin = window.Juego.verificarEstado();
-      if (fin.terminado) {
-        detenerCronometro();
-        if (window.UI.mostrarResultado) window.UI.mostrarResultado(fin.gano);
-      }
+      if (fin.terminado) finalizarPartida(fin.gano);
     });
 
     // Modal de resultado: jugar de nuevo
