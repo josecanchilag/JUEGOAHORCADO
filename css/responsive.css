@@ -1,0 +1,118 @@
+/* =========================================================
+   EL AHORCADO – CAPITALES DE COLOMBIA
+   responsive.css – Media queries de 360 px a escritorio
+   Objetivo: sin scroll horizontal en ningún ancho.
+   ========================================================= */
+
+/* ---------- Móvil pequeño (base hasta 479 px) ----------
+   Ajustes mínimos para 360 px: teclas del teclado y tarjetas. */
+@media (max-width: 479px) {
+  .encabezado {
+    padding: 10px 12px;
+  }
+  .encabezado__nombre {
+    font-size: 1.1rem;
+  }
+
+  .teclado {
+    gap: 6px;
+    margin-top: 16px;
+  }
+  .teclado__tecla {
+    min-width: 34px; /* en pantallas muy pequeñas se mantiene táctil con 44 px de alto */
+    min-height: var(--min-tactil);
+    font-size: 1rem;
+    padding: 4px 6px;
+  }
+
+  .letra {
+    min-width: 26px;
+    min-height: 40px;
+    font-size: 1.45rem;
+  }
+  .letra--espacio {
+    min-width: 12px;
+  }
+
+  .grupo-tarjetas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grupo-niveles {
+    grid-template-columns: 1fr;
+  }
+
+  .estado__fila {
+    gap: 8px;
+  }
+  .dato {
+    flex-basis: calc(50% - 8px);
+  }
+  .dato__valor--grande {
+    font-size: 1.25rem;
+  }
+
+  .acciones-principales .boton,
+  .acciones-juego .boton {
+    flex: 1 1 100%; /* botones apilados, fáciles de tocar */
+  }
+}
+
+/* ---------- Móvil grande (480 – 767 px) ---------- */
+@media (min-width: 480px) and (max-width: 767px) {
+  .tablero {
+    grid-template-columns: 1fr;
+  }
+  .tablero__dibujo {
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  .ahorcado {
+    max-width: 180px;
+  }
+  .grupo-tarjetas {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ---------- Tableta (768 – 1023 px): el tablero pasa a 2 columnas ---------- */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .tablero {
+    grid-template-columns: minmax(220px, 300px) 1fr;
+    gap: 14px;
+  }
+  .ahorcado {
+    max-width: 220px;
+  }
+}
+
+/* ---------- Escritorio pequeño (1024 – 1279 px) ---------- */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .tablero {
+    grid-template-columns: 320px 1fr;
+  }
+}
+
+/* ---------- Escritorio (1280 px en adelante) ---------- */
+@media (min-width: 1280px) {
+  .tablero {
+    grid-template-columns: 360px 1fr;
+    gap: 24px;
+  }
+  .teclado {
+    gap: 10px;
+  }
+}
+
+/* ---------- Ajustes de orientación apaisada en móvil/tablet ----------
+   (el dibujo ocupa menos alto para no forzar scroll) */
+@media (max-height: 560px) and (orientation: landscape) {
+  .ahorcado {
+    max-width: 150px;
+  }
+  .vista {
+    padding: 10px;
+  }
+  .palabra {
+    min-height: 44px;
+  }
+}
