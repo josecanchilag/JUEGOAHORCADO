@@ -907,6 +907,24 @@ body[data-tema="oscuro"] .tabla th { background: var(--azul); }
 body[data-tema="oscuro"] .mensaje--aviso { color: #FFE58A; }
 
 /* ---------- 16. ANIMACIONES @keyframes ---------- */
+/* Trazo animado del ahorcado (stroke-dashoffset con pathLength=100) */
+.ahorcado__parte {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 0;
+}
+.ahorcado__parte--visible {
+  stroke: var(--rojo);
+  stroke-width: 5;
+}
+.ahorcado__parte--trazar {
+  animation: trazar 0.7s ease both;
+}
+
+@keyframes trazar {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
 @keyframes aparecer {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }

@@ -102,10 +102,64 @@
     });
   }
 
-  // Exposición del módulo (dibujarAhorcado y mostrarResultado se agregan en pasos siguientes)
+  /** Orden obligatorio de las partes del ahorcado según los errores. */
+  const PARTES_AHORCADO = [
+    { id: 'cabeza', nombre: 'cabeza' },
+    { id: 'cuerpo', nombre: 'cuerpo' },
+    { id: 'brazoIzquierdo', nombre: 'brazo izquierdo' },
+    { id: 'brazoDerecho', nombre: 'brazo derecho' },
+    { id: 'piernaIzquierda', nombre: 'pierna izquierda' },
+    { id: 'piernaDerecha', nombre: 'pierna derecha' }
+  ];
+
+  /**
+   * Dibuja progresivamente el ahorcado en SVG según los errores.
+   * Orden: cabeza, cuerpo, brazo izquierdo, brazo derecho,
+   * pierna izquierdo, pierna derecha. Cada parte aparece con
+   * animación de trazo y actualiza <title>/<desc> para lectores
+   * de pantalla.
+   * @param {number} errores - Cantidad de errores acumulados (0 a 6).
+   */
+  function dibujarAhorcado(errores) {
+    const partes = document.querySelectorAll('.ahorcado__parte');
+    if (!partes.length) return;
+
+    partes.forEach(function (parte, indice) {
+      const debeMostrarse = indice < errores;
+
+      if (!debeMostrarse) {
+        parte.classList.remove('ahorcado__parte--visible', 'ahorcado__parte--trazar');
+        delete parte.dataset.animada;
+        return;
+      }
+
+      const yaVisible = parte.classList.contains('ahorcado__parte--visible');
+      parte.classList.add('ahorcado__parte--visible');
+
+      // La animación de trazo solo corre cuando la parte es nueva
+      if (!yaVisible && !parte.dataset.animada) {
+        parte.classList.add('ahorcado__parte--trazar');
+        parte.dataset.animada = '1';
+      }
+    });
+
+    // Descripción textual del estado del dibujo (accesibilidad)
+    const dibujadas = PARTES_AHORCADO.slice(0, errores).map(function (p) { return p.nombre; });
+    const desc = document.getElementById('ahorcado-desc');
+    if (desc) {
+      desc.textContent = errores === 0
+        ? 'Ahorcado sin errores: solo se ve la estructura del poste.'
+        : 'Ahorcado con ' + errores + ' de 6 errores. Dibujado hasta el ' +
+          dibujadas[dibujadas.length - 1] + '.';
+    }
+  }
+
+  // Exposición del módulo (mostrarResultado se agrega en el paso 8)
   window.UI = {
     LETRAS_TECLADO: LETRAS_TECLADO,
+    PARTES_AHORCADO: PARTES_AHORCADO,
     renderPalabra: renderPalabra,
-    renderTeclado: renderTeclado
+    renderTeclado: renderTeclado,
+    dibujarAhorcado: dibujarAhorcado
   };
 })();

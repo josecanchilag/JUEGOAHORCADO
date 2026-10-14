@@ -135,14 +135,14 @@
               <line x1="60" y1="20" x2="160" y2="20"></line>
               <line x1="160" y1="20" x2="160" y2="50"></line>
             </g>
-            <!-- Partes que se dibujan progresivamente -->
+            <!-- Partes que se dibujan progresivamente (pathLength normaliza el trazo) -->
             <g class="ahorcado__partes" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round">
-              <circle class="ahorcado__parte" data-parte="cabeza" cx="160" cy="72" r="22"></circle>
-              <line class="ahorcado__parte" data-parte="cuerpo" x1="160" y1="94" x2="160" y2="155"></line>
-              <line class="ahorcado__parte" data-parte="brazoIzquierdo" x1="160" y1="110" x2="125" y2="140"></line>
-              <line class="ahorcado__parte" data-parte="brazoDerecho" x1="160" y1="110" x2="195" y2="140"></line>
-              <line class="ahorcado__parte" data-parte="piernaIzquierda" x1="160" y1="155" x2="132" y2="205"></line>
-              <line class="ahorcado__parte" data-parte="piernaDerecha" x1="160" y1="155" x2="188" y2="205"></line>
+              <circle class="ahorcado__parte" data-parte="cabeza" cx="160" cy="72" r="22" pathLength="100"></circle>
+              <line class="ahorcado__parte" data-parte="cuerpo" x1="160" y1="94" x2="160" y2="155" pathLength="100"></line>
+              <line class="ahorcado__parte" data-parte="brazoIzquierdo" x1="160" y1="110" x2="125" y2="140" pathLength="100"></line>
+              <line class="ahorcado__parte" data-parte="brazoDerecho" x1="160" y1="110" x2="195" y2="140" pathLength="100"></line>
+              <line class="ahorcado__parte" data-parte="piernaIzquierda" x1="160" y1="155" x2="132" y2="205" pathLength="100"></line>
+              <line class="ahorcado__parte" data-parte="piernaDerecha" x1="160" y1="155" x2="188" y2="205" pathLength="100"></line>
             </g>
           </svg>
           <!-- Equivalente visual de los errores (no depende solo del color) -->
