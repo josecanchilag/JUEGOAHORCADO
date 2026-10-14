@@ -16,6 +16,120 @@
   let temporizadorSubtitulo = null;
   let intervaloTiempo = null; // cronómetro del nivel Difícil
 
+  /** Preferencias del jugador (leídas de "ahorcado_config"). */
+  let configuracion = {
+    sonido: true,
+    tema: 'claro',
+    altoContraste: false,
+    leerVoz: false,
+    factorTexto: 1
+  };
+
+  let contextoAudio = null; // Web Audio API (sin archivos externos)
+
+  /**
+   * Reproduce un sonido del juego generado con Web Audio API:
+   * acierto, error, victoria o derrota.
+   * Si el sonido está desactivado no hace nada (la información
+   * visual siempre está presente).
+   * @param {string} tipo - acierto|error|victoria|derrota
+   */
+  function reproducirSonido(tipo) {
+    if (!configuracion.sonido) return;
+
+    try {
+      const ContextoAudio = window.AudioContext || window.webkitAudioContext;
+      if (!ContextoAudio) return;
+      if (!contextoAudio) contextoAudio = new ContextoAudio();
+      if (contextoAudio.state === 'suspended') contextoAudio.resume();
+
+      const ahora = contextoAudio.currentTime;
+
+      /** Emite un tono simple. */
+      function tono(frecuencia, retraso, duracion, volumen, onda) {
+        const oscilador = contextoAudio.createOscillator();
+        const ganancia = contextoAudio.createGain();
+        oscilador.type = onda || 'sine';
+        oscilador.frequency.value = frecuencia;
+        ganancia.gain.setValueAtTime(volumen || 0.18, ahora + retraso);
+        ganancia.gain.exponentialRampToValueAtTime(0.001, ahora + retraso + duracion);
+        oscilador.connect(ganancia);
+        ganancia.connect(contextoAudio.destination);
+        oscilador.start(ahora + retraso);
+        oscilador.stop(ahora + retraso + duracion);
+      }
+
+      if (tipo === 'acierto') {
+        tono(523.25, 0, 0.12);      // Do
+        tono(659.25, 0.09, 0.15);   // Mi
+      } else if (tipo === 'error') {
+        tono(220, 0, 0.18, 0.15, 'square');
+        tono(165, 0.12, 0.22, 0.12, 'square');
+      } else if (tipo === 'victoria') {
+        [523.25, 659.25, 783.99, 1046.5].forEach(function (frecuencia, i) {
+          tono(frecuencia, i * 0.12, 0.2, 0.16);
+        });
+      } else if (tipo === 'derrota') {
+        tono(330, 0, 0.2, 0.14, 'triangle');
+        tono(262, 0.18, 0.3, 0.14, 'triangle');
+        tono(196, 0.36, 0.4, 0.14, 'triangle');
+      }
+    } catch (error) {
+      // Sin audio disponible: el juego continúa con el aviso visual
+    }
+  }
+
+  /** Carga las preferencias guardadas y las aplica a la página. */
+  function cargarPreferencias() {
+    configuracion = window.Almacenamiento.leerConfiguracion();
+    aplicarPreferencias();
+  }
+
+  /** Aplica tema, sonido y demás preferencias al DOM y a los controles. */
+  function aplicarPreferencias() {
+    document.body.dataset.tema = configuracion.tema;
+    document.body.classList.toggle('alto-contraste', configuracion.altoContraste);
+    document.documentElement.style.setProperty('--factor-texto', String(configuracion.factorTexto));
+
+    const sonido = $('opcion-sonido');
+    const tema = $('opcion-tema');
+    const contraste = $('opcion-contraste');
+    const voz = $('opcion-voz');
+    if (sonido) sonido.checked = configuracion.sonido;
+    if (tema) tema.checked = configuracion.tema === 'oscuro';
+    if (contraste) contraste.checked = configuracion.altoContraste;
+    if (voz) voz.checked = configuracion.leerVoz;
+  }
+
+  /** Guarda las preferencias actuales en localStorage. */
+  function guardarPreferencias() {
+    window.Almacenamiento.guardarConfiguracion(configuracion);
+  }
+
+  /** Conecta los controles del panel de accesibilidad y configuración. */
+  function conectarPanelConfiguracion() {
+    const sonido = $('opcion-sonido');
+    const tema = $('opcion-tema');
+
+    if (sonido) {
+      sonido.addEventListener('change', function () {
+        configuracion.sonido = sonido.checked;
+        guardarPreferencias();
+        if (configuracion.sonido) reproducirSonido('acierto');
+        mostrarSubtitulo(configuracion.sonido ? '🔊 Sonido activado' : '🔇 Sonido desactivado', null);
+      });
+    }
+
+    if (tema) {
+      tema.addEventListener('change', function () {
+        configuracion.tema = tema.checked ? 'oscuro' : 'claro';
+        guardarPreferencias();
+        aplicarPreferencias();
+        mostrarSubtitulo(configuracion.tema === 'oscuro' ? '🌗 Tema oscuro activado' : '☀️ Tema claro activado', null);
+      });
+    }
+  }
+
   /** Escribe un mensaje en el subtítulo (equivalente visual de los sonidos). */
   function mostrarSubtitulo(texto, tipo) {
     const subtitulo = $('subtitulo-aviso');
@@ -148,6 +262,7 @@
       puntaje: estado.puntaje,
       nombre: estado.jugador
     });
+    reproducirSonido(gano ? 'victoria' : 'derrota');
     if (window.UI.mostrarResultado) window.UI.mostrarResultado(gano);
   }
 
@@ -171,12 +286,14 @@
     if (resultado.resultado === 'acerto') {
       const frase = FRASES_ACIERTO[Math.floor(Math.random() * FRASES_ACIERTO.length)];
       mostrarSubtitulo(frase + ' Letra ' + letra.toUpperCase() + ' correcta (+' + resultado.puntos + ')', 'acierto');
+      reproducirSonido('acierto');
       anunciar('Letra ' + letra.toUpperCase() + ' correcta. Puntaje ' + estado.puntaje +
         '. Vidas restantes: ' + (estado.maxErrores - estado.errores) + '.');
       if (window.UI.dibujarAhorcado) window.UI.dibujarAhorcado(estado.errores);
     } else {
       const frase = FRASES_ERROR[Math.floor(Math.random() * FRASES_ERROR.length)];
       mostrarSubtitulo(frase + ' (−5 puntos)', 'error');
+      reproducirSonido('error');
       anunciar('Letra ' + letra.toUpperCase() + ' incorrecta. Quedan ' +
         (estado.maxErrores - estado.errores) + ' vidas.');
       if (window.UI.dibujarAhorcado) window.UI.dibujarAhorcado(estado.errores);
@@ -316,6 +433,8 @@
 
   /** Inicialización al cargar la página. */
   function iniciarAplicacion() {
+    cargarPreferencias();      // tema y sonido guardados
+    conectarPanelConfiguracion();
     conectarEventos();
   }
 

@@ -11,6 +11,17 @@
   <link rel="stylesheet" href="../css/responsive.css">
 </head>
 <body data-tema="claro">
+  <script>
+    // Aplica el tema/contraste/tamaño guardados en "ahorcado_config"
+    try {
+      var confGuardada = JSON.parse(localStorage.getItem('ahorcado_config') || '{}');
+      document.body.dataset.tema = confGuardada.tema === 'oscuro' ? 'oscuro' : 'claro';
+      if (confGuardada.altoContraste === true) document.body.classList.add('alto-contraste');
+      if (confGuardada.factorTexto) {
+        document.documentElement.style.setProperty('--factor-texto', String(confGuardada.factorTexto));
+      }
+    } catch (error) { /* sin preferencias: se usa el tema claro */ }
+  </script>
 
   <a class="enlace-saltar" href="#contenido">Saltar al contenido</a>
 
