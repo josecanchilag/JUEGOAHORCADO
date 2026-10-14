@@ -51,7 +51,15 @@
 
     $('dato-jugador').textContent = estado.jugador;
     $('dato-region').textContent = window.Juego.NOMBRES_REGION[estado.region];
-    $('dato-nivel').textContent = window.Juego.CONFIG_NIVELES[estado.nivel].nombre;
+    $('dato-nivel').textContent = window.Juego.CONFIG_NIVELES[estado.nivel].nombre +
+      ' ×' + estado.multiplicador;
+
+    // Botón de pista: contador y disponibilidad
+    const botonPista = $('boton-pista');
+    $('pista-contador').textContent = '(' + estado.pistasDisponibles + ')';
+    botonPista.disabled = estado.pistasDisponibles <= 0 || estado.terminado;
+    botonPista.setAttribute('aria-label',
+      'Usar pista, quedan ' + estado.pistasDisponibles + ' pistas, cuesta 15 puntos');
 
     // Vidas: corazón lleno o perdido + texto, nunca solo color
     const vidasRestantes = estado.maxErrores - estado.errores;
@@ -189,6 +197,29 @@
 
     // Reiniciar partida (RF-14)
     $('boton-reiniciar').addEventListener('click', reiniciarPartida);
+
+    // Usar pista (cuesta 15 puntos)
+    $('boton-pista').addEventListener('click', function () {
+      const resultado = window.Juego.usarPista();
+      if (!resultado.ok) {
+        mostrarSubtitulo(resultado.mensaje, null);
+        window.App.anunciar(resultado.mensaje);
+        return;
+      }
+
+      window.UI.renderPalabra();
+      window.UI.renderTeclado();
+      actualizarTablero();
+      mostrarSubtitulo(resultado.mensaje, resultado.tipo === 'letra' ? 'acierto' : null);
+      window.App.anunciar(resultado.mensaje + ' Puntaje: ' + window.Juego.estado.puntaje +
+        '. Pistas restantes: ' + window.Juego.estado.pistasDisponibles + '.');
+
+      // La letra de la pista pudo completar la palabra
+      const fin = window.Juego.verificarEstado();
+      if (fin.terminado && window.UI.mostrarResultado) {
+        window.UI.mostrarResultado(fin.gano);
+      }
+    });
 
     // Modal de resultado: jugar de nuevo
     $('boton-jugar-denuevo').addEventListener('click', function () {

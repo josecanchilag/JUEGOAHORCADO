@@ -221,7 +221,62 @@
       estado.puntaje += PUNTOS_VICTORIA + vidasRestantes * PUNTOS_POR_VIDA;
     }
 
+    // Puntaje final = subtotal × multiplicador del nivel
+    estado.puntaje = estado.puntaje * estado.multiplicador;
+
     return { terminado: true, gano: gano, motivo: estado.motivo };
+  }
+
+  /**
+   * Usa una pista disponible: la primera muestra el departamento de la
+   * capital y la segunda revela una letra aleatoria aún no descubierta.
+   * Cada pista cuesta 15 puntos.
+   * @returns {{ok: boolean, tipo?: string, mensaje?: string, letra?: string}}
+   */
+  function usarPista() {
+    if (estado.terminado) {
+      return { ok: false, mensaje: 'La partida ya terminó.' };
+    }
+    if (estado.pistasDisponibles <= 0) {
+      return { ok: false, mensaje: 'No te quedan pistas en este nivel. 😕' };
+    }
+
+    estado.pistasDisponibles -= 1;
+    estado.pistasUsadas += 1;
+    estado.puntaje += PUNTOS_PISTA; // −15 puntos por pista
+
+    // Primera pista: el departamento donde está la capital
+    if (estado.pistasUsadas === 1) {
+      return {
+        ok: true,
+        tipo: 'departamento',
+        mensaje: '📍 Pista: la capital está en ' + estado.departamento + ' (−15 puntos).'
+      };
+    }
+
+    // Segunda pista: revela una letra aleatoria aún no descubierta
+    const pendientes = [];
+    for (const caracter of estado.palabra) {
+      if (caracter === ' ') continue;
+      if (!estado.letrasAcertadas.includes(normalizar(caracter))) pendientes.push(caracter);
+    }
+
+    if (pendientes.length === 0) {
+      return { ok: true, tipo: 'departamento', mensaje: 'Ya la tienes casi completa (−15 puntos). 🎯' };
+    }
+
+    const letraRevelada = pendientes[Math.floor(Math.random() * pendientes.length)];
+    const clave = normalizar(letraRevelada);
+    if (!estado.letrasAcertadas.includes(clave)) {
+      estado.letrasAcertadas.push(clave);
+    }
+
+    return {
+      ok: true,
+      tipo: 'letra',
+      letra: letraRevelada,
+      mensaje: '💡 Pista: se reveló la letra ' + letraRevelada + ' (−15 puntos).'
+    };
   }
 
   // Exposición del módulo
@@ -234,6 +289,7 @@
     normalizar: normalizar,
     procesarLetra: procesarLetra,
     verificarEstado: verificarEstado,
+    usarPista: usarPista,
     contarLetrasUnicas: contarLetrasUnicas
   };
 })();
