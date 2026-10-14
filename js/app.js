@@ -14,6 +14,7 @@
   const FRASES_ERROR = ['¡Casi! Esa letra no está 😅', '¡Uy! Sigue intentando 💪', '¡No era! Aprendiste algo 🧠'];
 
   let temporizadorSubtitulo = null;
+  let intervaloTiempo = null; // cronómetro del nivel Difícil
 
   /** Escribe un mensaje en el subtítulo (equivalente visual de los sonidos). */
   function mostrarSubtitulo(texto, tipo) {
@@ -80,6 +81,64 @@
       (estado.errores === 0 ? ' ✅' : estado.errores < 3 ? ' ⚠️' : ' ❌');
   }
 
+  /** Dibuja el cronómetro en pantalla (solo corre en nivel Difícil). */
+  function pintarTiempo() {
+    const estado = window.Juego.estado;
+    const dato = $('dato-tiempo');
+    if (estado.tiempoRestante === null) {
+      dato.textContent = '—';
+      dato.classList.remove('agotandose');
+      return;
+    }
+    dato.textContent = '⏳ ' + estado.tiempoRestante + ' s';
+    // Aviso visual cuando quedan 10 s o menos (además de aria-live)
+    dato.classList.toggle('agotandose', estado.tiempoRestante <= 10);
+  }
+
+  /** Detiene el cronómetro si está corriendo. */
+  function detenerCronometro() {
+    if (intervaloTiempo) {
+      clearInterval(intervaloTiempo);
+      intervaloTiempo = null;
+    }
+  }
+
+  /** Inicia la cuenta regresiva de 90 s (solo en nivel Difícil). */
+  function iniciarCronometro() {
+    detenerCronometro();
+    pintarTiempo();
+
+    const estado = window.Juego.estado;
+    if (estado.tiempoRestante === null) return; // Fácil/Medio no tienen límite
+
+    // Momentos clave en los que se anuncia el tiempo restante
+    const MOMENTOS_CLAVE = [60, 30, 10, 5];
+
+    intervaloTiempo = setInterval(function () {
+      if (estado.terminado) {
+        detenerCronometro();
+        return;
+      }
+
+      estado.tiempoRestante -= 1;
+      pintarTiempo();
+
+      if (MOMENTOS_CLAVE.includes(estado.tiempoRestante)) {
+        anunciar('Quedan ' + estado.tiempoRestante + ' segundos.');
+        mostrarSubtitulo('⏳ Quedan ' + estado.tiempoRestante + ' segundos', null);
+      }
+
+      if (estado.tiempoRestante <= 0) {
+        detenerCronometro();
+        const fin = window.Juego.verificarEstado();
+        if (fin.terminado && window.UI.mostrarResultado) {
+          mostrarSubtitulo('⏰ ¡Se agotó el tiempo!', 'error');
+          window.UI.mostrarResultado(fin.gano);
+        }
+      }
+    }, 1000);
+  }
+
   /** Procesa la letra elegida (virtual o física) y actualiza todo. */
   function manejarLetra(letra) {
     const estado = window.Juego.estado;
@@ -113,8 +172,9 @@
 
     // ¿Terminó la partida?
     const fin = window.Juego.verificarEstado();
-    if (fin.terminado && window.UI.mostrarResultado) {
-      window.UI.mostrarResultado(fin.gano);
+    if (fin.terminado) {
+      detenerCronometro();
+      if (window.UI.mostrarResultado) window.UI.mostrarResultado(fin.gano);
     }
   }
 
@@ -126,6 +186,7 @@
     actualizarTablero();
     if (window.UI.dibujarAhorcado) window.UI.dibujarAhorcado(window.Juego.estado.errores);
     cambiarVista('vista-juego');
+    iniciarCronometro();
     anunciar('Partida iniciada. Adivina la capital. Vidas: ' +
       (window.Juego.estado.maxErrores - window.Juego.estado.errores) + '.');
   }
@@ -169,7 +230,7 @@
     const nivel = estado.nivel;
     const nombre = estado.jugador;
 
-    if (window.UI.detenerCronometro) window.UI.detenerCronometro();
+    detenerCronometro();
 
     const resultado = window.Juego.iniciarPartida(region, nivel, nombre);
     if (resultado.ok) {
@@ -216,8 +277,9 @@
 
       // La letra de la pista pudo completar la palabra
       const fin = window.Juego.verificarEstado();
-      if (fin.terminado && window.UI.mostrarResultado) {
-        window.UI.mostrarResultado(fin.gano);
+      if (fin.terminado) {
+        detenerCronometro();
+        if (window.UI.mostrarResultado) window.UI.mostrarResultado(fin.gano);
       }
     });
 
@@ -262,6 +324,8 @@
     manejarLetra: manejarLetra,
     cambiarVista: cambiarVista,
     anunciar: anunciar,
-    mostrarSubtitulo: mostrarSubtitulo
+    mostrarSubtitulo: mostrarSubtitulo,
+    iniciarCronometro: iniciarCronometro,
+    detenerCronometro: detenerCronometro
   };
 })();

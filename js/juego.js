@@ -206,14 +206,15 @@
     const letrasNecesarias = contarLetrasUnicas();
     const gano = letrasNecesarias > 0 && estado.letrasAcertadas.length >= letrasNecesarias;
     const sinVidas = estado.errores >= estado.maxErrores;
+    const sinTiempo = estado.tiempoRestante !== null && estado.tiempoRestante <= 0;
 
-    if (!gano && !sinVidas) {
+    if (!gano && !sinVidas && !sinTiempo) {
       return { terminado: false, gano: false };
     }
 
     estado.terminado = true;
     estado.gano = gano;
-    estado.motivo = gano ? 'victoria' : 'errores';
+    estado.motivo = gano ? 'victoria' : (sinTiempo ? 'tiempo' : 'errores');
 
     // Bono de victoria: +50 + (vidas restantes × 10)
     if (gano) {
