@@ -35,9 +35,10 @@
   --texto-sobre-azul: #FFFFFF;
   --borde: #D3DCE8;
 
-  /* Tipografías: Fredoka (redonda, divertida) para títulos; Nunito (limpia) para cuerpo */
-  --fuente-titulo: 'Fredoka', 'Comic Sans MS', 'Trebuchet MS', sans-serif;
-  --fuente-cuerpo: 'Nunito', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  /* Tipografías: Bungee (rotulada, llamativa) para títulos; Outfit (limpia,
+     geométrica y contemporánea) para el cuerpo. Fuentes de respaldo en la pila. */
+  --fuente-titulo: 'Bungee', 'Arial Black', 'Impact', sans-serif;
+  --fuente-cuerpo: 'Outfit', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 
   /* Escala de texto (la controla el botón A+ / A− de accesibilidad) */
   --factor-texto: 1;
@@ -100,6 +101,8 @@ html {
   /* Escala global de texto (A+ / A−) */
   font-size: calc(100% * var(--factor-texto));
   -webkit-text-size-adjust: 100%;
+  /* Bungee solo tiene peso 400: evita negritas falsas (faux bold) */
+  font-synthesis: none;
 }
 
 body {
