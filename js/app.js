@@ -195,6 +195,24 @@
       $('modal-resultado').hidden = true;
       reiniciarPartida();
     });
+
+    // Teclado físico: escribe una letra y juega igual que con el virtual.
+    // La normalización (tildes y Ñ) la hace Juego.normalizar().
+    document.addEventListener('keydown', function (evento) {
+      if (evento.ctrlKey || evento.metaKey || evento.altKey) return;
+
+      const vistaJuego = $('vista-juego');
+      if (!vistaJuego || !vistaJuego.classList.contains('vista--activa')) return;
+
+      // No interferir si el foco está en un campo de texto
+      const etiqueta = evento.target.tagName;
+      if (etiqueta === 'INPUT' || etiqueta === 'TEXTAREA') return;
+
+      const tecla = evento.key;
+      if (tecla && tecla.length === 1 && /^[a-záéíóúüñ]$/i.test(tecla)) {
+        manejarLetra(window.Juego.normalizar(tecla));
+      }
+    });
   }
 
   /** Inicialización al cargar la página. */
