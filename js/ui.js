@@ -10,6 +10,9 @@
   const LETRAS_TECLADO = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
     'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
+  /** Letras ya descubiertas en el render anterior (para animar solo las nuevas). */
+  let letrasDescubiertasPrevias = new Set();
+
   /**
    * Dibuja la palabra oculta con guiones bajo por letra.
    * Los espacios de las capitales con varias palabras se muestran
@@ -22,6 +25,7 @@
     const estado = window.Juego.estado;
     contenedor.innerHTML = '';
     const visible = [];
+    const descubiertasAhora = new Set();
 
     for (const caracter of estado.palabra) {
       const celda = document.createElement('span');
@@ -36,11 +40,21 @@
         const descubierto = estado.letrasAcertadas.includes(clave);
         celda.className = descubierto ? 'letra letra--descubierta' : 'letra';
         celda.textContent = descubierto ? caracter : '＿';
+
+        if (descubierto) {
+          descubiertasAhora.add(clave);
+          // Anima únicamente la letra recién revelada
+          if (!letrasDescubiertasPrevias.has(clave)) {
+            celda.classList.add('letra--nueva');
+          }
+        }
         visible.push(descubierto ? caracter : 'sin descubrir');
       }
 
       contenedor.appendChild(celda);
     }
+
+    letrasDescubiertasPrevias = descubiertasAhora;
 
     // Descripción legible para lectores de pantalla
     contenedor.setAttribute(
@@ -60,6 +74,42 @@
       const porcentaje = total > 0 ? Math.min(100, Math.round((hechas / total) * 100)) : 0;
       barra.style.width = porcentaje + '%';
     }
+  }
+
+  /** Borra el historial de letras animadas (al iniciar una partida nueva). */
+  function reiniciarRender() {
+    letrasDescubiertasPrevias = new Set();
+  }
+
+  /**
+   * Lanza confeti en CSS/JS puro al ganar (sin librerías).
+   * Se autodestruye al terminar la animación.
+   */
+  function lanzarConfeti() {
+    // Respeta la preferencia del sistema de movimiento reducido
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const contenedor = document.createElement('div');
+    contenedor.className = 'contenedor-confeti';
+    contenedor.setAttribute('aria-hidden', 'true');
+
+    const colores = ['#2E74B5', '#2E9E5B', '#F5C518', '#D64545', '#1F3864'];
+
+    for (let i = 0; i < 60; i++) {
+      const pieza = document.createElement('span');
+      pieza.className = 'confeti-pieza';
+      pieza.style.left = Math.random() * 100 + 'vw';
+      pieza.style.background = colores[i % colores.length];
+      pieza.style.animationDuration = (2.2 + Math.random() * 1.8) + 's';
+      pieza.style.animationDelay = (Math.random() * 0.8) + 's';
+      pieza.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+      contenedor.appendChild(pieza);
+    }
+
+    document.body.appendChild(contenedor);
+    setTimeout(function () {
+      if (contenedor.parentNode) contenedor.parentNode.removeChild(contenedor);
+    }, 5000);
   }
 
   /**
@@ -206,6 +256,9 @@
 
     // Actualiza el teclado (todo queda deshabilitado al terminar)
     renderTeclado();
+
+    // Celebración de victoria: confeti en CSS/JS puro
+    if (gano) lanzarConfeti();
   }
 
   // Exposición del módulo
@@ -215,6 +268,8 @@
     renderPalabra: renderPalabra,
     renderTeclado: renderTeclado,
     dibujarAhorcado: dibujarAhorcado,
-    mostrarResultado: mostrarResultado
+    mostrarResultado: mostrarResultado,
+    reiniciarRender: reiniciarRender,
+    lanzarConfeti: lanzarConfeti
   };
 })();

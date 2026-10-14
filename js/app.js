@@ -300,6 +300,12 @@
       mostrarSubtitulo(frase + ' Letra ' + letra.toUpperCase() + ' correcta (+' + resultado.puntos + ')', 'acierto');
       reproducirSonido('acierto');
       vibrar('acierto');
+      // Pulso verde en la tecla acertada
+      const tecla = document.querySelector('.teclado__tecla[data-letra="' + letra + '"]');
+      if (tecla) {
+        tecla.classList.add('teclado__tecla--pulso');
+        setTimeout(function () { tecla.classList.remove('teclado__tecla--pulso'); }, 550);
+      }
       anunciar('Letra ' + letra.toUpperCase() + ' correcta. Puntaje ' + estado.puntaje +
         '. Vidas restantes: ' + (estado.maxErrores - estado.errores) + '.');
       if (window.UI.dibujarAhorcado) window.UI.dibujarAhorcado(estado.errores);
@@ -308,6 +314,11 @@
       mostrarSubtitulo(frase + ' (−5 puntos)', 'error');
       reproducirSonido('error');
       vibrar('error');
+      // Sacudida del teclado al fallar
+      const teclado = $('teclado');
+      teclado.classList.remove('teclado--sacudido');
+      void teclado.offsetWidth; // reinicia la animación
+      teclado.classList.add('teclado--sacudido');
       anunciar('Letra ' + letra.toUpperCase() + ' incorrecta. Quedan ' +
         (estado.maxErrores - estado.errores) + ' vidas.');
       if (window.UI.dibujarAhorcado) window.UI.dibujarAhorcado(estado.errores);
@@ -321,6 +332,7 @@
   /** Prepara la vista de juego con una partida recién iniciada. */
   function prepararVistaJuego() {
     $('modal-resultado').hidden = true; // por si venía de una partida anterior
+    window.UI.reiniciarRender();
     window.UI.renderPalabra();
     window.UI.renderTeclado();
     actualizarTablero();

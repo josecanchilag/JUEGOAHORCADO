@@ -608,7 +608,10 @@ body.alto-contraste .ahorcado {
   font-weight: 700;
   color: var(--azul-oscuro);
   border-bottom: 3px solid var(--azul);
-  animation: aparecer-letra 0.25s ease both;
+}
+/* Solo la letra recién descubierta se anima (no toda la palabra) */
+.letra--nueva {
+  animation: aparecer-letra 0.3s ease both;
 }
 body[data-tema="oscuro"] .letra,
 body.alto-contraste .letra {
@@ -703,6 +706,43 @@ body[data-tema="oscuro"] .subtitulo-aviso--error { color: #FF9B9B; }
 .teclado__tecla--error {
   background: var(--rojo-boton);
   border-color: #8E2727;
+}
+/* Sacudida del teclado cuando falla una letra */
+.teclado--sacudido {
+  animation: sacudir 0.45s ease;
+}
+
+/* Pulso verde al acertar (feedback inmediato) */
+.teclado__tecla--pulso {
+  animation: destello-verde 0.5s ease-out;
+}
+
+/* ---------- Confeti de victoria (CSS/JS puro, sin librerías) ---------- */
+.contenedor-confeti {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  overflow: hidden;
+  pointer-events: none;
+}
+.confeti-pieza {
+  position: absolute;
+  top: -24px;
+  width: 12px;
+  height: 18px;
+  border-radius: 3px;
+  opacity: 0.95;
+  animation: confeti-caer linear forwards;
+}
+@keyframes confeti-caer {
+  0% {
+    transform: translateY(0) rotate3d(1, 1, 0, 0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(105vh) rotate3d(1, 1, 1, 720deg);
+    opacity: 0.2;
+  }
 }
 
 /* ---------- 11. MODAL DE RESULTADO ---------- */
