@@ -41,17 +41,17 @@ python3 -m http.server 8000
 ## 🌐 Despliegue
 
 - **Sitio desplegado en Vercel**: [juegoahorcado10.vercel.app](https://juegoahorcado10.vercel.app/)
-- **Repositorio en GitHub**: [github.com/josecanchilag/JUEGOAHORCADO](https://github.com/josecanchilag/JUEGOAHORCADO)
+- **Repositorio en GitHub**: [github.com/josecanchilag/ahorcado-web](https://github.com/josecanchilag/ahorcado-web)
 
 ### Pasos para desplegar en Vercel (sitio estático, sin build)
 
 1. Subida del repositorio a GitHub:
    ```bash
-   git remote add origin https://github.com/josecanchilag/JUEGOAHORCADO.git
+   git remote add origin https://github.com/josecanchilag/ahorcado-web.git
    git push -u origin main
    ```
 2. Entra a [vercel.com](https://vercel.com) con tu cuenta de GitHub → **Add New → Project**.
-3. Importa el repositorio **JUEGOAHORCADO** (Vercel lo detecta como sitio estático: no pedirá framework ni comando de build).
+3. Importa el repositorio **ahorcado-web** (Vercel lo detecta como sitio estático: no pedirá framework ni comando de build).
 4. Deja **Root Directory** en `/` (la raíz del repo ya contiene `index.html`) y guarda.
 5. Pulsa **Deploy**. Al terminar se recibe la URL pública (`https://juegoahorcado10.vercel.app/`).
 6. Cada `git push` a `main` vuelve a desplegar automáticamente la versión más reciente.
