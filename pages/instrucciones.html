@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instrucciones – El Ahorcado de las Capitales</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body data-tema="claro">
+
+  <a class="enlace-saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="encabezado">
+    <div class="encabezado__marca">
+      <span class="encabezado__icono" aria-hidden="true">🇨🇴</span>
+      <span class="encabezado__nombre">El Ahorcado</span>
+    </div>
+    <nav class="encabezado__nav" aria-label="Navegación principal">
+      <a class="boton boton--suave" href="../index.html">🏠 Menú</a>
+      <a class="boton boton--suave" href="estadisticas.html">📊 Estadísticas</a>
+    </nav>
+  </header>
+
+  <main id="contenido" tabindex="-1" class="pagina-contenido">
+    <article class="tarjeta tarjeta--principal">
+      <h1 class="titulo-principal">📖 Instrucciones</h1>
+
+      <section>
+        <h2>¿Cómo se juega?</h2>
+        <ol class="lista-instrucciones">
+          <li>Escribe tu nombre, elige una <strong>región</strong> y un <strong>nivel</strong>.</li>
+          <li>Verás una capital oculta con guiones. En capitales de varias palabras (por ejemplo <em>SANTA MARTA</em>) los espacios se muestran desde el inicio.</li>
+          <li>Elige letras con el teclado en pantalla o con el teclado físico. <strong>Cada letra solo se puede usar una vez.</strong></li>
+          <li>Si la letra está en la capital, se revela en todas sus posiciones ✅. Si no está, se dibuja una parte del ahorcado ❌.</li>
+          <li>Ganas si descubres la palabra antes de <strong>6 errores</strong>. Pierdes con 6 errores o, en nivel Difícil, al agotar los <strong>90 segundos</strong>.</li>
+          <li>Al terminar verás la capital con su departamento y región.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Niveles</h2>
+        <table class="tabla">
+          <thead>
+            <tr><th>Nivel</th><th>Letras</th><th>Pistas</th><th>Tiempo</th><th>Multiplicador</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Fácil</td><td>4 a 6</td><td>2</td><td>Sin límite</td><td>×1</td></tr>
+            <tr><td>Medio</td><td>7 a 9</td><td>1</td><td>Sin límite</td><td>×2</td></tr>
+            <tr><td>Difícil</td><td>10 o más</td><td>0</td><td>90 segundos</td><td>×3</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Puntuación</h2>
+        <ul class="lista-instrucciones">
+          <li>Letra correcta: <strong>+10</strong> por cada aparición.</li>
+          <li>Letra incorrecta: <strong>−5</strong>.</li>
+          <li>Cada pista: <strong>−15</strong> (la primera muestra el departamento, la segunda revela una letra).</li>
+          <li>Ganar: <strong>+50 + (vidas restantes × 10)</strong>.</li>
+          <li>Puntaje final = subtotal × multiplicador del nivel.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Consejos</h2>
+        <ul class="lista-instrucciones">
+          <li>Las tildes no importan: escribir <strong>o</strong> revela la <strong>Ó</strong> de QUIBDÓ.</li>
+          <li>La <strong>Ñ</strong> es una letra aparte (Puerto Carreño la tiene).</li>
+          <li>Usa las pistas con cuidado: restan puntos.</li>
+        </ul>
+      </section>
+
+      <div class="acciones-principales">
+        <a class="boton boton--primario boton--grande" href="../index.html">▶ ¡A jugar!</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="pie">
+    <p>El Ahorcado – Capitales de Colombia · Lenguajes de Programación · UDES 2026</p>
+  </footer>
+</body>
+</html>

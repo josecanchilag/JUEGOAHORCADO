@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estadísticas – El Ahorcado de las Capitales</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body data-tema="claro">
+
+  <a class="enlace-saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="encabezado">
+    <div class="encabezado__marca">
+      <span class="encabezado__icono" aria-hidden="true">🇨🇴</span>
+      <span class="encabezado__nombre">El Ahorcado</span>
+    </div>
+    <nav class="encabezado__nav" aria-label="Navegación principal">
+      <a class="boton boton--suave" href="../index.html">🏠 Menú</a>
+      <a class="boton boton--suave" href="instrucciones.html">📖 Instrucciones</a>
+    </nav>
+  </header>
+
+  <main id="contenido" tabindex="-1" class="pagina-contenido">
+    <section class="tarjeta tarjeta--principal" aria-labelledby="titulo-estadisticas">
+      <h1 class="titulo-principal" id="titulo-estadisticas">📊 Estadísticas</h1>
+
+      <!-- Resumen de partidas -->
+      <div class="rejilla-estadisticas" id="rejilla-estadisticas">
+        <div class="tarjeta-dato"><span class="tarjeta-dato__valor" id="stat-jugadas">0</span><span class="tarjeta-dato__etiqueta">Jugadas</span></div>
+        <div class="tarjeta-dato tarjeta-dato--verde"><span class="tarjeta-dato__valor" id="stat-ganadas">0</span><span class="tarjeta-dato__etiqueta">Ganadas</span></div>
+        <div class="tarjeta-dato tarjeta-dato--rojo"><span class="tarjeta-dato__valor" id="stat-perdidas">0</span><span class="tarjeta-dato__etiqueta">Perdidas</span></div>
+        <div class="tarjeta-dato"><span class="tarjeta-dato__valor" id="stat-porcentaje">0%</span><span class="tarjeta-dato__etiqueta">% victorias</span></div>
+        <div class="tarjeta-dato"><span class="tarjeta-dato__valor" id="stat-racha">0</span><span class="tarjeta-dato__etiqueta">Racha actual</span></div>
+        <div class="tarjeta-dato tarjeta-dato--dorado"><span class="tarjeta-dato__valor" id="stat-mejor-racha">0</span><span class="tarjeta-dato__etiqueta">Mejor racha</span></div>
+      </div>
+
+      <!-- Ranking top 5 -->
+      <h2 class="subtitulo-seccion">🏆 Top 5 puntajes</h2>
+      <div class="contenedor-tabla">
+        <table class="tabla" id="tabla-ranking">
+          <thead>
+            <tr><th>#</th><th>Jugador</th><th>Puntaje</th><th>Fecha</th></tr>
+          </thead>
+          <tbody id="cuerpo-ranking">
+            <tr><td colspan="4" class="tabla__vacia">Aún no hay partidas registradas.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="acciones-principales">
+        <a class="boton boton--primario boton--grande" href="../index.html">▶ Jugar ahora</a>
+        <button type="button" class="boton boton--peligro" id="boton-reiniciar-stats">🗑️ Reiniciar estadísticas</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <p>El Ahorcado – Capitales de Colombia · Lenguajes de Programación · UDES 2026</p>
+  </footer>
+
+  <script src="../js/almacenamiento.js"></script>
+  <script src="estadisticas.js"></script>
+</body>
+</html>

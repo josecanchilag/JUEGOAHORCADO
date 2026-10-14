@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="El Ahorcado – Capitales de Colombia. Juego educativo para adivinar las capitales de los departamentos de Colombia.">
+  <title>El Ahorcado – Capitales de Colombia</title>
+  <!-- Tipografías: Fredoka para títulos, Nunito para el cuerpo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body data-tema="claro">
+
+  <!-- Enlace para saltar al contenido (accesibilidad, teclado) -->
+  <a class="enlace-saltar" href="#contenido">Saltar al contenido</a>
+
+  <!-- ===== ENCABEZADO ===== -->
+  <header class="encabezado">
+    <div class="encabezado__marca">
+      <span class="encabezado__icono" aria-hidden="true">🇨🇴</span>
+      <span class="encabezado__nombre">El Ahorcado</span>
+    </div>
+    <nav class="encabezado__nav" aria-label="Navegación principal">
+      <button type="button" class="boton boton--suave" id="boton-accesibilidad" aria-expanded="false" aria-controls="panel-accesibilidad">
+        ♿ Accesibilidad
+      </button>
+    </nav>
+  </header>
+
+  <!-- ===== CONTENIDO PRINCIPAL ===== -->
+  <main id="contenido" tabindex="-1">
+
+    <!-- ---------- VISTA 1: MENÚ PRINCIPAL ---------- -->
+    <section class="vista vista--activa" id="vista-menu" aria-labelledby="titulo-menu">
+      <div class="tarjeta tarjeta--principal">
+        <h1 class="titulo-principal" id="titulo-menu">El Ahorcado <span class="titulo-principal__sub">Capitales de Colombia</span></h1>
+        <p class="subtitulo">Adivina las capitales de los 32 departamentos antes de quedarte sin intentos.</p>
+
+        <!-- Nombre del jugador (RF-01) -->
+        <div class="campo">
+          <label for="campo-nombre">Tu nombre</label>
+          <input type="text" id="campo-nombre" maxlength="20" placeholder="Ej: Daniela" autocomplete="off">
+        </div>
+
+        <!-- Selector de región con tarjetas visuales -->
+        <fieldset class="campo grupo-tarjetas" id="selector-region">
+          <legend>Elige la región</legend>
+          <label class="tarjeta-region">
+            <input type="radio" name="region" value="andina">
+            <span class="tarjeta-region__cara" aria-hidden="true">🏔️</span>
+            <span class="tarjeta-region__texto">Andina</span>
+          </label>
+          <label class="tarjeta-region">
+            <input type="radio" name="region" value="caribe">
+            <span class="tarjeta-region__cara" aria-hidden="true">🏖️</span>
+            <span class="tarjeta-region__texto">Caribe</span>
+          </label>
+          <label class="tarjeta-region">
+            <input type="radio" name="region" value="pacifica">
+            <span class="tarjeta-region__cara" aria-hidden="true">🌊</span>
+            <span class="tarjeta-region__texto">Pacífica</span>
+          </label>
+          <label class="tarjeta-region">
+            <input type="radio" name="region" value="orinoquia">
+            <span class="tarjeta-region__cara" aria-hidden="true">🌿</span>
+            <span class="tarjeta-region__texto">Orinoquía</span>
+          </label>
+          <label class="tarjeta-region">
+            <input type="radio" name="region" value="amazonia">
+            <span class="tarjeta-region__cara" aria-hidden="true">🌴</span>
+            <span class="tarjeta-region__texto">Amazonía</span>
+          </label>
+          <label class="tarjeta-region">
+            <input type="radio" name="region" value="insular">
+            <span class="tarjeta-region__cara" aria-hidden="true">🏝️</span>
+            <span class="tarjeta-region__texto">Insular</span>
+          </label>
+          <label class="tarjeta-region tarjeta-region--ancho">
+            <input type="radio" name="region" value="todo" checked>
+            <span class="tarjeta-region__cara" aria-hidden="true">🗺️</span>
+            <span class="tarjeta-region__texto">Todo el país</span>
+          </label>
+        </fieldset>
+
+        <!-- Selector de nivel -->
+        <fieldset class="campo grupo-niveles" id="selector-nivel">
+          <legend>Elige el nivel</legend>
+          <label class="tarjeta-nivel">
+            <input type="radio" name="nivel" value="facil" checked>
+            <span class="tarjeta-nivel__nombre">Fácil</span>
+            <span class="tarjeta-nivel__dato">4–6 letras · 2 pistas · ×1</span>
+          </label>
+          <label class="tarjeta-nivel">
+            <input type="radio" name="nivel" value="medio">
+            <span class="tarjeta-nivel__nombre">Medio</span>
+            <span class="tarjeta-nivel__dato">7–9 letras · 1 pista · ×2</span>
+          </label>
+          <label class="tarjeta-nivel">
+            <input type="radio" name="nivel" value="dificil">
+            <span class="tarjeta-nivel__nombre">Difícil</span>
+            <span class="tarjeta-nivel__dato">10+ letras · 90 s · ×3</span>
+          </label>
+        </fieldset>
+
+        <!-- Mensaje de aviso (combinación sin capitales, etc.) -->
+        <p class="mensaje mensaje--aviso" id="mensaje-menu" role="status" hidden></p>
+
+        <!-- Acciones del menú -->
+        <div class="acciones-principales">
+          <button type="button" class="boton boton--grande boton--primario" id="boton-jugar">▶ Jugar</button>
+          <a class="boton boton--suave" href="pages/instrucciones.html">📖 Instrucciones</a>
+          <a class="boton boton--suave" href="pages/estadisticas.html">📊 Estadísticas</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- VISTA 2: JUEGO ---------- -->
+    <section class="vista" id="vista-juego" aria-labelledby="titulo-juego" hidden>
+      <h1 class="visually-hidden" id="titulo-juego">Partida en curso</h1>
+
+      <div class="tablero">
+
+        <!-- Columna izquierda: dibujo del ahorcado -->
+        <div class="tablero__dibujo tarjeta">
+          <svg id="svg-ahorcado" class="ahorcado" viewBox="0 0 220 260" role="img" aria-labelledby="ahorcado-titulo ahorcado-desc">
+            <title id="ahorcado-titulo">Dibujo del ahorcado</title>
+            <desc id="ahorcado-desc">Ahorcado con 0 de 6 errores.</desc>
+            <!-- Base y poste (siempre visibles) -->
+            <g class="ahorcado__estructura" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round">
+              <line x1="20" y1="245" x2="140" y2="245"></line>
+              <line x1="60" y1="245" x2="60" y2="20"></line>
+              <line x1="60" y1="20" x2="160" y2="20"></line>
+              <line x1="160" y1="20" x2="160" y2="50"></line>
+            </g>
+            <!-- Partes que se dibujan progresivamente -->
+            <g class="ahorcado__partes" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round">
+              <circle class="ahorcado__parte" data-parte="cabeza" cx="160" cy="72" r="22"></circle>
+              <line class="ahorcado__parte" data-parte="cuerpo" x1="160" y1="94" x2="160" y2="155"></line>
+              <line class="ahorcado__parte" data-parte="brazoIzquierdo" x1="160" y1="110" x2="125" y2="140"></line>
+              <line class="ahorcado__parte" data-parte="brazoDerecho" x1="160" y1="110" x2="195" y2="140"></line>
+              <line class="ahorcado__parte" data-parte="piernaIzquierda" x1="160" y1="155" x2="132" y2="205"></line>
+              <line class="ahorcado__parte" data-parte="piernaDerecha" x1="160" y1="155" x2="188" y2="205"></line>
+            </g>
+          </svg>
+          <!-- Equivalente visual de los errores (no depende solo del color) -->
+          <p class="intentos" id="intentos-texto" aria-hidden="true">Errores: 0/6 ✅</p>
+        </div>
+
+        <!-- Columna derecha: estado de la partida -->
+        <div class="tablero__estado tarjeta">
+          <div class="estado__fila">
+            <div class="dato">
+              <span class="dato__etiqueta">Jugador</span>
+              <span class="dato__valor" id="dato-jugador">—</span>
+            </div>
+            <div class="dato">
+              <span class="dato__etiqueta">Región</span>
+              <span class="dato__valor" id="dato-region">—</span>
+            </div>
+            <div class="dato">
+              <span class="dato__etiqueta">Nivel</span>
+              <span class="dato__valor" id="dato-nivel">—</span>
+            </div>
+          </div>
+
+          <div class="estado__fila">
+            <div class="dato dato--vidas">
+              <span class="dato__etiqueta">Vidas</span>
+              <span class="dato__valor" id="dato-vidas" aria-label="6 vidas restantes">❤️❤️❤️❤️❤️❤️</span>
+            </div>
+            <div class="dato dato--puntaje">
+              <span class="dato__etiqueta">Puntaje</span>
+              <span class="dato__valor dato__valor--grande" id="dato-puntaje">0</span>
+            </div>
+            <div class="dato dato--tiempo">
+              <span class="dato__etiqueta">Tiempo</span>
+              <span class="dato__valor dato__valor--grande" id="dato-tiempo">—</span>
+            </div>
+          </div>
+
+          <!-- Palabra oculta con guiones -->
+          <div class="palabra" id="palabra" aria-label="Palabra oculta"></div>
+
+          <!-- Barra de progreso (letras descubiertas) -->
+          <div class="progreso" aria-hidden="true">
+            <div class="progreso__barra" id="barra-progreso"></div>
+          </div>
+
+          <!-- Acciones durante la partida (RF-14) -->
+          <div class="acciones-juego">
+            <button type="button" class="boton boton--pista" id="boton-pista">💡 Pista <span id="pista-contador">(2)</span></button>
+            <button type="button" class="boton boton--suave" id="boton-reiniciar">🔄 Reiniciar</button>
+            <a class="boton boton--suave" href="index.html">🏠 Menú</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Teclado virtual A–Z + Ñ -->
+      <div class="teclado" id="teclado" role="group" aria-label="Teclado virtual de letras"></div>
+
+      <!-- Subtítulo de avisos sonoros y mensajes motivadores -->
+      <p class="subtitulo-aviso" id="subtitulo-aviso" aria-hidden="true"></p>
+    </section>
+  </main>
+
+  <!-- Región aria-live para anunciar el estado del juego -->
+  <div class="visually-hidden" id="anuncios" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ===== VENTANA MODAL DE RESULTADO ===== -->
+  <div class="modal-overlay" id="modal-resultado" hidden>
+    <div class="modal tarjeta" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+      <div class="modal__icono" id="modal-icono" aria-hidden="true">🎉</div>
+      <h2 class="modal__titulo" id="modal-titulo">¡Ganaste!</h2>
+      <p class="modal__palabra" id="modal-palabra"></p>
+      <p class="modal__detalle" id="modal-detalle"></p>
+      <p class="modal__puntaje">Puntaje final: <strong id="modal-puntaje">0</strong></p>
+      <div class="modal__acciones">
+        <button type="button" class="boton boton--primario" id="boton-jugar-denuevo">🔄 Jugar de nuevo</button>
+        <a class="boton boton--suave" href="index.html">🏠 Volver al menú</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PANEL DE ACCESIBILIDAD Y CONFIGURACIÓN ===== -->
+  <aside class="panel-accesibilidad" id="panel-accesibilidad" aria-label="Panel de accesibilidad y configuración" hidden>
+    <div class="panel-accesibilidad__cabecera">
+      <h2 class="panel-accesibilidad__titulo">♿ Accesibilidad</h2>
+      <button type="button" class="boton boton--icono" id="cerrar-accesibilidad" aria-label="Cerrar panel de accesibilidad">✕</button>
+    </div>
+
+    <div class="opcion">
+      <label for="opcion-sonido">🔊 Sonido</label>
+      <input type="checkbox" id="opcion-sonido" role="switch" checked>
+    </div>
+    <div class="opcion">
+      <label for="opcion-tema">🌗 Tema oscuro</label>
+      <input type="checkbox" id="opcion-tema" role="switch">
+    </div>
+    <div class="opcion">
+      <label for="opcion-contraste">⬛ Alto contraste</label>
+      <input type="checkbox" id="opcion-contraste" role="switch">
+    </div>
+    <div class="opcion">
+      <label for="opcion-voz">🗣️ Leer estado en voz alta</label>
+      <input type="checkbox" id="opcion-voz" role="switch">
+    </div>
+
+    <div class="opcion opcion--texto">
+      <span id="etiqueta-tamano">🔤 Tamaño del texto</span>
+      <div class="control-tamano" role="group" aria-labelledby="etiqueta-tamano">
+        <button type="button" class="boton boton--icono" id="texto-menos" aria-label="Reducir el tamaño del texto">A−</button>
+        <button type="button" class="boton boton--icono" id="texto-mas" aria-label="Aumentar el tamaño del texto">A+</button>
+      </div>
+    </div>
+
+    <p class="panel-accesibilidad__nota">Las preferencias se guardan en este navegador.</p>
+  </aside>
+
+  <!-- Pie de página -->
+  <footer class="pie">
+    <p>El Ahorcado – Capitales de Colombia · Lenguajes de Programación · UDES 2026</p>
+  </footer>
+
+  <!-- Módulos JavaScript (carga en orden, sin frameworks) -->
+  <script src="js/palabras.js"></script>
+  <script src="js/almacenamiento.js"></script>
+  <script src="js/juego.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
