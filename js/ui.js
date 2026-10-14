@@ -154,12 +154,12 @@
 
   /** Orden obligatorio de las partes del ahorcado según los errores. */
   const PARTES_AHORCADO = [
-    { id: 'cabeza', nombre: 'cabeza' },
-    { id: 'cuerpo', nombre: 'cuerpo' },
-    { id: 'brazoIzquierdo', nombre: 'brazo izquierdo' },
-    { id: 'brazoDerecho', nombre: 'brazo derecho' },
-    { id: 'piernaIzquierda', nombre: 'pierna izquierda' },
-    { id: 'piernaDerecha', nombre: 'pierna derecha' }
+    { id: 'cabeza', nombre: 'cabeza', articulo: 'la' },
+    { id: 'cuerpo', nombre: 'cuerpo', articulo: 'el' },
+    { id: 'brazoIzquierdo', nombre: 'brazo izquierdo', articulo: 'el' },
+    { id: 'brazoDerecho', nombre: 'brazo derecho', articulo: 'el' },
+    { id: 'piernaIzquierda', nombre: 'pierna izquierda', articulo: 'la' },
+    { id: 'piernaDerecha', nombre: 'pierna derecha', articulo: 'la' }
   ];
 
   /**
@@ -194,13 +194,14 @@
     });
 
     // Descripción textual del estado del dibujo (accesibilidad)
-    const dibujadas = PARTES_AHORCADO.slice(0, errores).map(function (p) { return p.nombre; });
+    const dibujadas = PARTES_AHORCADO.slice(0, errores);
     const desc = document.getElementById('ahorcado-desc');
     if (desc) {
       desc.textContent = errores === 0
         ? 'Ahorcado sin errores: solo se ve la estructura del poste.'
-        : 'Ahorcado con ' + errores + ' de 6 errores. Dibujado hasta el ' +
-          dibujadas[dibujadas.length - 1] + '.';
+        : 'Ahorcado con ' + errores + ' de 6 errores. Dibujado hasta ' +
+          dibujadas[dibujadas.length - 1].articulo + ' ' +
+          dibujadas[dibujadas.length - 1].nombre + '.';
     }
   }
 

@@ -14,12 +14,25 @@
     font-size: 1.1rem;
   }
 
+  /* El tablero pasa a una sola columna para no desbordar los 360 px */
+  .tablero {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .tablero__dibujo {
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  .ahorcado {
+    max-width: 150px;
+  }
+
   .teclado {
     gap: 6px;
     margin-top: 16px;
   }
   .teclado__tecla {
-    min-width: 34px; /* en pantallas muy pequeñas se mantiene táctil con 44 px de alto */
+    min-width: var(--min-tactil); /* nunca menos de 44 px (táctil) */
     min-height: var(--min-tactil);
     font-size: 1rem;
     padding: 4px 6px;
