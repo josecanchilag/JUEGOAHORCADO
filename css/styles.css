@@ -27,7 +27,12 @@
 
   /* Tema claro (por defecto) */
   --fondo-pagina: #E9F1FA;
-  --fondo-degradado: linear-gradient(135deg, #1F3864 0%, #2E74B5 55%, #2E9E5B 140%);
+  /* Fondo vivo: capas radiales de la propia paleta sobre el degradado base */
+  --fondo-degradado:
+    radial-gradient(900px 520px at 8% -12%, rgba(46, 116, 181, 0.45), transparent 62%),
+    radial-gradient(760px 480px at 108% 18%, rgba(46, 158, 91, 0.38), transparent 58%),
+    radial-gradient(700px 620px at 55% 118%, rgba(31, 56, 100, 0.42), transparent 65%),
+    linear-gradient(160deg, #1F3864 0%, #2E74B5 55%, #2E9E5B 140%);
   --superficie: #FFFFFF;
   --superficie-2: var(--gris-claro);
   --texto: #1A2233;
@@ -55,7 +60,11 @@
 /* ---------- 2. TEMA OSCURO (derivado de la misma paleta) ---------- */
 body[data-tema="oscuro"] {
   --fondo-pagina: #101C33;
-  --fondo-degradado: linear-gradient(135deg, #0C1629 0%, #1F3864 60%, #1B5C39 140%);
+  --fondo-degradado:
+    radial-gradient(900px 520px at 8% -12%, rgba(46, 116, 181, 0.40), transparent 62%),
+    radial-gradient(760px 480px at 108% 18%, rgba(46, 158, 91, 0.22), transparent 58%),
+    radial-gradient(700px 620px at 55% 118%, rgba(31, 56, 100, 0.55), transparent 65%),
+    linear-gradient(160deg, #0C1629 0%, #1F3864 85%);
   --superficie: #1B2F55;
   --superficie-2: #16274476;
   --texto: #EAF1FB;
@@ -124,7 +133,7 @@ body::before {
   position: fixed;
   inset: 0;
   background: var(--fondo-pagina);
-  opacity: 0.86;
+  opacity: 0.78;
   z-index: -1;
 }
 
@@ -182,15 +191,27 @@ img, svg {
 
 /* ---------- 5. ENCABEZADO, PIE Y VISTAS ---------- */
 .encabezado {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
   padding: 12px clamp(12px, 4vw, 32px);
-  background: var(--azul-oscuro);
+  background: linear-gradient(95deg, var(--azul-oscuro) 0%, #1B3563 55%, var(--azul) 160%);
   color: #FFFFFF;
   box-shadow: var(--sombra);
+}
+
+/* Franja de acento con los colores de la paleta */
+.encabezado::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--azul) 0%, var(--verde) 50%, #F5C518 100%);
 }
 
 .encabezado__marca {
@@ -216,7 +237,7 @@ img, svg {
   margin-top: 40px;
   padding: 18px 16px;
   text-align: center;
-  background: var(--azul-oscuro);
+  background: linear-gradient(95deg, var(--azul) -40%, var(--azul-oscuro) 60%);
   color: #FFFFFF;
   font-size: 0.9rem;
 }
@@ -244,20 +265,39 @@ img, svg {
   background: var(--superficie);
   border: 1px solid var(--borde);
   border-radius: var(--radio-grande);
-  box-shadow: var(--sombra);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.65) inset,
+    0 12px 28px rgba(31, 56, 100, 0.14),
+    0 3px 8px rgba(31, 56, 100, 0.10);
   padding: clamp(16px, 3vw, 28px);
 }
 
 .tarjeta--principal {
   max-width: 980px;
   margin: 0 auto;
+  position: relative;
+}
+
+/* Franja superior con la paleta obligatoria (tarjetas destacadas) */
+.tarjeta--principal::before,
+.modal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 7px;
+  border-radius: var(--radio-grande) var(--radio-grande) 0 0;
+  background: linear-gradient(90deg, var(--azul-oscuro) 0%, var(--azul) 45%, var(--verde) 100%);
 }
 
 .titulo-principal {
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(1.75rem, 5vw, 2.75rem);
   color: var(--azul-oscuro);
   text-align: center;
   margin-bottom: 8px;
+  /* Sombra dura tipo rotulada, coherente con Bungee */
+  text-shadow: 0 3px 0 rgba(46, 116, 181, 0.22);
 }
 body[data-tema="oscuro"] .titulo-principal,
 body.alto-contraste .titulo-principal {
@@ -449,7 +489,7 @@ input[type="text"]:focus {
 }
 
 .boton--primario {
-  background: var(--azul);
+  background: linear-gradient(180deg, #3E88CB 0%, var(--azul) 55%, #25619E 100%);
   color: #FFFFFF; /* 4.9:1 ✓ */
   box-shadow: 0 4px 0 var(--azul-oscuro);
 }
@@ -627,6 +667,9 @@ body.alto-contraste .letra {
 .letra--descubierta {
   color: var(--verde-texto);
   border-bottom-color: var(--verde);
+  background: rgba(46, 158, 91, 0.12);
+  border-radius: 8px;
+  padding: 0 6px;
 }
 body[data-tema="oscuro"] .letra--descubierta {
   color: #6FE6A3;
@@ -686,7 +729,7 @@ body[data-tema="oscuro"] .subtitulo-aviso--error { color: #FF9B9B; }
   font-size: 1.15rem;
   font-weight: 700;
   color: #FFFFFF;
-  background: var(--azul);
+  background: linear-gradient(180deg, #3E88CB 0%, var(--azul) 55%, #25619E 100%);
   border: 2px solid var(--azul-oscuro);
   border-radius: 12px;
   cursor: pointer;
@@ -764,6 +807,7 @@ body[data-tema="oscuro"] .subtitulo-aviso--error { color: #FF9B9B; }
   display: none;
 }
 .modal {
+  position: relative;
   width: min(480px, 100%);
   text-align: center;
   animation: rebotar 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
