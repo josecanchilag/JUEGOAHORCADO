@@ -149,6 +149,17 @@
   function anunciar(texto) {
     const zona = $('anuncios');
     if (zona) zona.textContent = texto;
+    // Lectura en voz alta si el jugador la activó (Web Speech API)
+    if (window.Accesibilidad && window.Accesibilidad.hablar) {
+      window.Accesibilidad.hablar(texto);
+    }
+  }
+
+  /** Vibración equivalente a los sonidos (discapacidad auditiva). */
+  function vibrar(tipo) {
+    if (window.Accesibilidad && window.Accesibilidad.vibrar) {
+      window.Accesibilidad.vibrar(tipo);
+    }
   }
 
   /** Muestra u oculta las vistas del juego. */
@@ -263,6 +274,7 @@
       nombre: estado.jugador
     });
     reproducirSonido(gano ? 'victoria' : 'derrota');
+    vibrar(gano ? 'victoria' : 'derrota');
     if (window.UI.mostrarResultado) window.UI.mostrarResultado(gano);
   }
 
@@ -287,6 +299,7 @@
       const frase = FRASES_ACIERTO[Math.floor(Math.random() * FRASES_ACIERTO.length)];
       mostrarSubtitulo(frase + ' Letra ' + letra.toUpperCase() + ' correcta (+' + resultado.puntos + ')', 'acierto');
       reproducirSonido('acierto');
+      vibrar('acierto');
       anunciar('Letra ' + letra.toUpperCase() + ' correcta. Puntaje ' + estado.puntaje +
         '. Vidas restantes: ' + (estado.maxErrores - estado.errores) + '.');
       if (window.UI.dibujarAhorcado) window.UI.dibujarAhorcado(estado.errores);
@@ -294,6 +307,7 @@
       const frase = FRASES_ERROR[Math.floor(Math.random() * FRASES_ERROR.length)];
       mostrarSubtitulo(frase + ' (−5 puntos)', 'error');
       reproducirSonido('error');
+      vibrar('error');
       anunciar('Letra ' + letra.toUpperCase() + ' incorrecta. Quedan ' +
         (estado.maxErrores - estado.errores) + ' vidas.');
       if (window.UI.dibujarAhorcado) window.UI.dibujarAhorcado(estado.errores);
@@ -451,6 +465,10 @@
     anunciar: anunciar,
     mostrarSubtitulo: mostrarSubtitulo,
     iniciarCronometro: iniciarCronometro,
-    detenerCronometro: detenerCronometro
+    detenerCronometro: detenerCronometro,
+    obtenerPreferencias: function () { return configuracion; },
+    aplicarPreferencias: aplicarPreferencias,
+    guardarPreferencias: guardarPreferencias,
+    reproducirSonido: reproducirSonido
   };
 })();
